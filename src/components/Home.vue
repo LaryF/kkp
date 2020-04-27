@@ -39,15 +39,15 @@
         class="fill-height"
         fluid
       >
-        <v-row v-if="info!=null && (prayerId==0||prayerId==undefined)"> <!-- only show in the beginning -->
+        <v-row v-if= "(prayerId==0||prayerId==undefined)"> <!-- only show in the beginning -->
           <v-col vcols="12">
             <v-row>
               <v-col vcols="12">
                 Today is 
-                <span v-for="cel in info.celebrations" :key="cel.title">
-                  <span v-if="cel.title.substring(0,5)=='Saint'">the feast of </span>
-                  {{cel.title}}
-                </span>
+                <!-- <span v-for="cel in info.celebrations" :key="cel.title"> -->
+                  <span v-if="title.substring(0,5)=='Saint' || title.substring(0,7)=='Blessed'">the feast of </span>
+                  {{title}}
+                <!-- </span> -->
               </v-col>
             </v-row>
             <v-row justify="center">
@@ -65,8 +65,8 @@
           </v-col>
         </v-row>
 
-        <div v-if="info!=null && prayerId!=0"> <!-- Shows selected prayer -->
-          <PrayerContent :key="dialog" :optionId="prayerId" :season="info.season" :day="sat" :group="groupName"/>
+        <div v-if="prayerId!=0"> <!-- Shows selected prayer -->
+          <PrayerContent :key="dialog" :optionId="prayerId" :season="season" :day="sat" :group="groupName"/>
         </div>
 
       </v-container>
@@ -123,7 +123,7 @@
 
 <script>
   import PrayerContent from "./PrayerContent"
-  import axios from 'axios'; //to make rest calls to the liturgical calendar api
+  
   export default {
     name: "Home",
     components: {
@@ -139,48 +139,65 @@
       }
       else
         this.groupName = 'The Sword of the Spirit';
+      
+      var neededDate = new Date();
+      var weekNo = Math.ceil(neededDate.getDate()/7);
+      var romcal = require('romcal');
+      var calData = romcal.calendarFor({//loading liturgical info for the day
+          country: 'india',
+          query: {
+            day: neededDate.getDay(), // 0 - Sunday, 6 - Saturday (week beginning with Sunday)
+            month: neededDate.getMonth() // 0 - Jan, 11 - Dec (month begining with Jan)
+          }
+        },
+      );
+    
+      var calInfo = calData[weekNo-1];
 
-      //loading liturgical info for the day
-      var d = new Date();
-      var dateString = d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
-      var requestString = 'http://calapi.inadiutorium.cz/api/v0/en/calendars/default/' + dateString;
-      axios
-      .get(requestString)
-      .then(response => (this.info = response.data))
-      .catch(error => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() =>{
-          if(this.info.celebrations[0].colour=="violet") {
-            this.$vuetify.theme.themes.light.primary = '#4A148C';
-            this.colourDark = false;
-          }
-          else if (this.info.celebrations[0].colour=="red"){
-            this.$vuetify.theme.themes.light.primary = '#B71C1C';
-            this.colourDark = false;
-          }
-          else if (this.info.celebrations[0].colour=="rose"){
-            this.$vuetify.theme.themes.light.primary = '#FF80AB';
-            this.colourDark = false;
-          }
-          else if (this.info.celebrations[0].colour=="white"){
-            this.$vuetify.theme.themes.light.primary = '#E2AB00';
-            this.colourDark = true;
-          }
-          else if (this.info.celebrations[0].colour=="green"){
-            this.$vuetify.theme.themes.light.primary = '#1B5E20';
-            this.colourDark = true;
-          }
-          else {
-            this.$vuetify.theme.themes.light.primary = '#3F51B5';
-          }
-          if(Date.parse(dateString)>=Date.parse("2020/01/18")&&Date.parse(dateString)<=Date.parse("2020/01/25"))
-          {
-            this.info.season='unity';
-          }
-      });
+      this.title = calInfo.name;
+
+      if(calInfo.data.season.key == 'Holy Week')
+        this.season = 'Lent';
+      if(calInfo.data.season.key == 'Christmastide')
+        this.season = 'Christmas';
+      if(calInfo.data.season.key == 'Early Ordinary Time' || calInfo.data.season.key == 'Early Ordinary Time')
+        this.season = 'Ordinary';
+      else
+        this.season = calInfo.data.season.key;
+
+      if(neededDate.getDay()!=0)
+      this.sat=true;
+
+      var colour =  calInfo.data.meta.liturgicalColor.key;
+
+      if(colour=='RED') {
+        this.$vuetify.theme.themes.light.primary = '#B71C1C';
+      }
+      else if(colour=='ROSE') {
+        this.$vuetify.theme.themes.light.primary = '#F59AB8';
+      }
+      else if(colour=='PURPLE') {
+        this.$vuetify.theme.themes.light.primary = '#E2AB00';
+      }
+      else if(colour=='GREEN') {
+        this.$vuetify.theme.themes.light.primary = '#1B5E20';
+      }
+      else if(colour=='WHITE') {
+        this.$vuetify.theme.themes.light.primary = '#E2AB00';
+      }
+      else if(colour=='GOLD') {
+        this.$vuetify.theme.themes.light.primary = '#E2AB00';
+      }
+      else 
+        this.$vuetify.theme.themes.light.primary = '#3F51B5';
+
+      if(neededDate >= Date.parse("2020/01/18") 
+          && Date.parse(neededDate) <= Date.parse("2020/01/25"))
+      {
+        this.season='unity';
+      }
     },
+
     data: () => ({
       drawer: null,
       items: [
@@ -199,7 +216,8 @@
           ],
         }
       ],
-      info: null,
+      season: '',
+      title: '',
       prayerId: 0,
       sat: true, //variable that is true unless the day is Sunday. Saturday's prayer is the default prayer any day except for Sunday
       dialog: false,
@@ -230,16 +248,10 @@
       getPrayer: function(array) { //gets the prayer id from the treeview
         console.log("prayer", array[0]);
         this.drawer=false; //hides the navigation drawer when a prayer is chosen
-        if(this.info!=null) {
-          this.sat = !(this.info.weekday=="sunday")
-        }
         this.prayerId=array[0];
       },
       getPrayerBy: function(e) {
         console.log("prayerz", e);
-        if(this.info!=null) {
-          this.sat = !(this.info.weekday=="sunday")
-        }
         this.prayerId=parseInt(e.currentTarget.id);
       },
       setSat() {

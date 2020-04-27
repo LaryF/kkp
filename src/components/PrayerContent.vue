@@ -1,5 +1,5 @@
 <template>
-  <div class="prayer">
+  <div class="prayer unselectable">
     <p v-for="line in newLines" :key="line.no" v-bind:class="line.markUp">{{line.text}}</p>
   </div>
 </template>

@@ -37,7 +37,7 @@ p{
 
 .A {
     /* assistant */
-    color: olivedrab;
+    color: #447700;
     font-size: 20px;
 }
 
@@ -54,4 +54,13 @@ p{
 .R {
     /* optionally responsive */
     font-style: italic;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
