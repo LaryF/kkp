@@ -227,6 +227,7 @@
     computed: {
       cardItems: function() {
         var prefix='';
+        const tempArr=JSON.parse(JSON.stringify(this.items));
         function getLeafNodes(nodes, result=[]) {
           
           for(var i=0; i<nodes.length;i++ ){
@@ -241,7 +242,7 @@
           prefix=prefix.substring(0, prefix.indexOf(' ')+1);
           return result;
         }
-        return getLeafNodes(this.items);
+        return getLeafNodes(tempArr);
       }
     },
     methods: { 
