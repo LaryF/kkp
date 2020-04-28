@@ -44,10 +44,8 @@
             <v-row>
               <v-col vcols="12">
                 Today is 
-                <!-- <span v-for="cel in info.celebrations" :key="cel.title"> -->
                   <span v-if="title.substring(0,5)=='Saint' || title.substring(0,7)=='Blessed'">the feast of </span>
                   {{title}}
-                <!-- </span> -->
               </v-col>
             </v-row>
             <v-row justify="center">
