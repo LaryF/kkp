@@ -1,12 +1,13 @@
 <template>
-  <Home/>
+  <!-- <Home/> -->
+  <router-view></router-view>
 </template>
 
 <script>
-  import Home from "../src/components/Home"
+  /* import Home from "../src/components/Home" */
   export default {
-    components:{
+    /* components:{
       Home
-    }
+    } */
   }
 </script>

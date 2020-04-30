@@ -2,7 +2,6 @@
   <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
-      dark
       app>
       <v-list dense>
 
@@ -17,6 +16,11 @@
             <v-icon>
               {{ item.icon }}
             </v-icon>
+          </template>
+          <template v-slot:label="{ item }">
+            <router-link :to="{ name: 'PrayerContent' }">
+              {{ item.name }}
+            </router-link>
           </template>
         </v-treeview>
 
@@ -44,27 +48,31 @@
             <v-row>
               <v-col vcols="12">
                 Today is 
-                  <span v-if="title.substring(0,5)=='Saint' || title.substring(0,7)=='Blessed'">the feast of </span>
+                  <span v-if="title.substring(0,5)=='Saint' || title.substring(0,7)=='Blessed' || title.substring(0,3)=='Our'">
+                    the feast of 
+                  </span>
                   {{title}}
               </v-col>
             </v-row>
             <v-row justify="center">
               <v-col vcol="12" v-for="card in cardItems" :key="card.id">
-                <v-card raised :id="card.id" @click="getPrayerBy">
-                  <v-card-actions>
-                      <v-btn :id="card.id" color="primary" fab x-large dark>
-                        <v-icon>{{card.icon}}</v-icon>
-                      </v-btn>
-                      <v-card-text>{{card.name}}</v-card-text>
-                  </v-card-actions>
-                </v-card>
+                <router-link :to="{ name: 'PrayerContent' }">
+                  <v-card raised :id="card.id" @click="getPrayerBy">
+                    <v-card-actions>
+                        <v-btn :id="card.id" color="primary" fab x-large dark>
+                          <v-icon>{{card.icon}}</v-icon>
+                        </v-btn>
+                        <v-card-text>{{card.name}}</v-card-text>
+                    </v-card-actions>
+                  </v-card>
+                </router-link>
               </v-col>
             </v-row>
           </v-col>
         </v-row>
 
-        <div v-if="prayerId!=0"> <!-- Shows selected prayer -->
-          <PrayerContent :key="dialog" :optionId="prayerId" :season="season" :day="sat" :group="groupName"/>
+        <div > <!-- Shows selected prayer v-if="prayerId!=0"-->
+          <router-view :key="dialog" :optionId="prayerId" :season="season" :day="sat" @change-prayer-id="changePrayerId"></router-view>
         </div>
 
       </v-container>
@@ -120,13 +128,13 @@
 </template>
 
 <script>
-  import PrayerContent from "./PrayerContent"
+  /* import PrayerContent from "./PrayerContent" */
   
   export default {
     name: "Home",
-    components: {
+    /* components: {
       PrayerContent
-    },
+    }, */
     props: {
       source: String,
     },
@@ -158,7 +166,7 @@
         this.season = 'Lent';
       if(calInfo.data.season.key == 'Christmastide')
         this.season = 'Christmas';
-      if(calInfo.data.season.key == 'Early Ordinary Time' || calInfo.data.season.key == 'Early Ordinary Time')
+      if(calInfo.data.season.key == 'Early Ordinary Time' || calInfo.data.season.key == 'Later Ordinary Time')
         this.season = 'Ordinary';
       else
         this.season = calInfo.data.season.key;
@@ -167,7 +175,6 @@
       this.sat=true;
 
       var colour =  calInfo.data.meta.liturgicalColor.key;
-
       if(colour=='RED') {
         this.$vuetify.theme.themes.light.primary = '#B71C1C';
       }
@@ -175,7 +182,7 @@
         this.$vuetify.theme.themes.light.primary = '#F59AB8';
       }
       else if(colour=='PURPLE') {
-        this.$vuetify.theme.themes.light.primary = '#E2AB00';
+        this.$vuetify.theme.themes.light.primary = '#4A148C';
       }
       else if(colour=='GREEN') {
         this.$vuetify.theme.themes.light.primary = '#1B5E20';
@@ -262,6 +269,9 @@
       persist() {
         this.dialog = false;
         localStorage.groupName = this.groupName; //to set a different community name for other community's users
+      },
+      changePrayerId() {
+        this.prayerId=0;
       }
     }
   }

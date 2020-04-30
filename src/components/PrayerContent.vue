@@ -16,8 +16,7 @@ export default {
   props: {
     optionId: Number,
     season: String,
-    day: Boolean,
-    group: String
+    day: Boolean
   },
   data() {
     return {
@@ -27,10 +26,11 @@ export default {
     };
   },
   created() {
-      if(!this.group=='')
-        this.groupName = this.group;
-      else
-        this.groupName = 'The Sword of the Spirit';
+    if (localStorage.groupName) {
+      this.groupName = localStorage.groupName;  //to get a different community name for other community's users
+    }
+    else
+      this.groupName = 'The Sword of the Spirit';
   },
   computed: {
     newLines: function() {
@@ -78,7 +78,11 @@ export default {
       }
       return null;
     }
-  }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$emit('change-prayer-id');
+    next();
+}
 };
 </script>
 
