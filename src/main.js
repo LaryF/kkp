@@ -15,7 +15,8 @@ const routes = [
     children: [
       { path: 'prayer', name: 'PrayerContent', component: PrayerContent }
     ]
-  }
+  },
+  { path: '*', name: 'Home', component: Home }
 ];
 
 const router = new VueRouter({ mode: 'history', routes: routes });
