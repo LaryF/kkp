@@ -19,7 +19,7 @@ p{
 
 .I {
     /* instruction */
-    color: grey;
+    background-color: #80808029;
     font-size: 15px;
 }
 
@@ -31,13 +31,13 @@ p{
 
 .L {
     /* leader */
-    color: mediumblue;
+    background-color: #0000cd1c;
     font-size: 20px;
 }
 
 .A {
     /* assistant */
-    color: #447700;
+    background-color: #44770026;
     font-size: 20px;
 }
 

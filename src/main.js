@@ -11,15 +11,14 @@ import PrayerContent from '../src/components/PrayerContent';
 Vue.config.productionTip = false;
 
 const routes = [
-  { path: '/kkp', name: 'Home', component: Home, 
+  { path: '/', name: 'Home', component: Home, 
     children: [
       { path: 'prayer', name: 'PrayerContent', component: PrayerContent }
     ]
-  },
-  { path: '*', name: 'Home', component: Home }
+  }
 ];
 
-const router = new VueRouter({ mode: 'history', routes: routes });
+const router = new VueRouter({ routes: routes });
 
 new Vue({
   vuetify,
