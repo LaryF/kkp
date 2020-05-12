@@ -112,9 +112,9 @@
         <v-card>
           <v-card-title class="primary white--text">Guide:</v-card-title>
             <v-card-text>
-              <p class="L">Blue text - Leader</p>
-              <p class="A">Green text - Assistant</p>
-              <p class="G">Black text - Group</p>
+              <p class="L">Blue - Leader</p>
+              <p class="A">Green - Assistant</p>
+              <p class="G">White - Group</p>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
