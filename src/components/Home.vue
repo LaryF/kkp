@@ -82,7 +82,7 @@
       v-bind:color="this.$vuetify.theme.themes.light.primary"
       app
     >
-      <span class="white--text">&copy; 2020</span>
+      <span class="white--text">&copy; 2021</span>
       <v-spacer></v-spacer>
       
       <v-btn v-show="(prayerId==3||prayerId==4)" text small @click.stop="dialog2 = true" class="white--text">Guide</v-btn>
@@ -164,9 +164,9 @@
 
       if(calInfo.data.season.key == 'Holy Week')
         this.season = 'Lent';
-      if(calInfo.data.season.key == 'Christmastide')
+      else if(calInfo.data.season.key == 'Christmastide')
         this.season = 'Christmas';
-      if(calInfo.data.season.key == 'Early Ordinary Time' || calInfo.data.season.key == 'Later Ordinary Time')
+      else if(calInfo.data.season.key == 'Early Ordinary Time' || calInfo.data.season.key == 'Later Ordinary Time')
         this.season = 'Ordinary';
       else
         this.season = calInfo.data.season.key;
@@ -196,8 +196,8 @@
       else 
         this.$vuetify.theme.themes.light.primary = '#3F51B5';
 
-      if(neededDate >= Date.parse("2020/01/18") 
-          && Date.parse(neededDate) <= Date.parse("2020/01/25"))
+      if(neededDate >= Date.parse(neededDate.getFullYear()+"/01/18") 
+          && Date.parse(neededDate) <= Date.parse(neededDate.getFullYear()+"/01/25"))
       {
         this.season='unity';
       }

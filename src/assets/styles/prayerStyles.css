@@ -46,6 +46,18 @@ p{
     font-size: 20px;
 }
 
+.G1 {
+    /* group */
+    font-size: 20px;
+    margin-left: 20pt;
+}
+
+.G2 {
+    /* group */
+    font-size: 20px;
+    margin-left: 40pt;
+}
+
 .O {
     /* optional */
     background-color: #ffeeee;

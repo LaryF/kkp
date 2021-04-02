@@ -9,7 +9,7 @@ import satBeforeLines from "./info/LDCsat-before.json";
 import satAfterLines from "./info/LDCsat-after.json";
 import sunBeforeLines from './info/LDCsun-before.json';
 import sunAfterLines from './info/LDCsun-after.json';
-import bulwarkLines from './info/community-year-prayer.json';
+import commPrayerLines from './info/community-2021-prayer.json';
 import protectionLines from "./info/protection.json";
 export default {
   name: "PrayerContent",
@@ -70,7 +70,7 @@ export default {
       }
 
       if(this.optionId == 5) {
-        return bulwarkLines;
+        return commPrayerLines;
       }
 
       if (this.optionId == 6) {
